@@ -14,7 +14,6 @@ import example.pullrequest.com.pullrequestapp.injection.MainActivityComponent;
 import example.pullrequest.com.pullrequestapp.ui.main.IMainPresenter;
 
 public class MainActivity extends AppCompatActivity {
-
     private MainActivityComponent component;
     @Inject
     IMainPresenter mainPresenter;

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">services</string>
+    <string name="info_label" formatted="false">#%d opened on %s by %s</string>
 </resources>
