@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PullRequestApp</string>
+    <string name="publicRepoTitle">Enter public GitHub repo:</string>
 </resources>
