@@ -2,4 +2,5 @@
     <string name="app_name">PullRequestApp</string>
     <string name="publicRepoTitle">Enter public GitHub repo:</string>
     <string name="getResults">Get Pull Requests</string>
+    <string name="loading">Fetching PR\'s</string>
 </resources>

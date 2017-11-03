@@ -1,15 +1,19 @@
 package example.pullrequest.com.pullrequestapp.ui.main;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import example.pullrequest.com.api.PullRequestResponse;
+import example.pullrequest.com.pullrequestapp.R;
 import example.pullrequest.com.pullrequestapp.framework.Presenter;
 import example.pullrequest.com.pullrequestapp.ui.main.adapter.PullRequestRecycler;
 import example.pullrequest.com.services.observers.IApiService;
@@ -27,6 +31,7 @@ public class MainPresenter extends Presenter<MainView, Object> implements IMainP
     private String githubPrefixUrl = "www.github.com/";
     private String OPEN_PR = "open";
     private static final String TAG = MainPresenter.class.getSimpleName();
+    private ProgressDialog progressDialog;
 
     PullRequestRecycler adapter;
     List<PullRequestResponse> listOfOpenPrs;
@@ -38,23 +43,6 @@ public class MainPresenter extends Presenter<MainView, Object> implements IMainP
         listOfOpenPrs = new ArrayList<>();
     }
 
-    TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    };
-
     @Override
     public void bindControls() {
         view.publicRepoUrl.setText(defaultRepoUrl);
@@ -65,24 +53,36 @@ public class MainPresenter extends Presenter<MainView, Object> implements IMainP
         view.getResults.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                apiService.getPullRequestsAsync(owner, repo)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(new Consumer<List<PullRequestResponse>>() {
-                            @Override
-                            public void accept(List<PullRequestResponse> pullRequestResponses) throws Exception {
-                                if(pullRequestResponses != null) {
-                                    createListOfOpenPrs(pullRequestResponses);
-                                    adapter = new PullRequestRecycler(context, listOfOpenPrs, MainPresenter.this);
-                                    linearLayoutManager = new LinearLayoutManager(context);
-                                    view.recycler.setLayoutManager(linearLayoutManager);
-                                    view.recycler.setAdapter(adapter);
+                show();
+                if (adapter == null) {
+                    apiService.getPullRequestsAsync(owner, repo)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(new Consumer<List<PullRequestResponse>>() {
+                                @Override
+                                public void accept(List<PullRequestResponse> pullRequestResponses) throws Exception {
+                                    if (pullRequestResponses != null) {
+                                        handleAdapterBindOnApiResponse(pullRequestResponses);
+                                    }
+                                    hide();
                                 }
-                            }
-                        });
+                            });
+                } else {
+                    adapter.clear();
+                    adapter.notifyDataSetChanged();
+                    hide();
+                }
             }
         });
 
+    }
+
+    private void handleAdapterBindOnApiResponse(List<PullRequestResponse> pullRequestResponses) {
+        createListOfOpenPrs(pullRequestResponses);
+        adapter = new PullRequestRecycler(context, listOfOpenPrs, MainPresenter.this);
+        linearLayoutManager = new LinearLayoutManager(context);
+        view.recycler.setLayoutManager(linearLayoutManager);
+        view.recycler.setAdapter(adapter);
     }
 
     private void createListOfOpenPrs(List<PullRequestResponse> pullRequestResponses) {
@@ -95,11 +95,17 @@ public class MainPresenter extends Presenter<MainView, Object> implements IMainP
 
     @Override
     public void hide() {
-
+        if(progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 
     @Override
     public void show() {
-
+        if(progressDialog == null) {
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setMessage(context.getString(R.string.loading));
+            progressDialog.show();
+        }
     }
 }

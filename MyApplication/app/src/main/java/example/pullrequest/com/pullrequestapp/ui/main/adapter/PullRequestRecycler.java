@@ -45,12 +45,22 @@ public class PullRequestRecycler extends RecyclerView.Adapter<PullRequestRecycle
         holder.nameOfPr.setText(prObject.title);
         String infoLabel = context.getResources().getString(R.string.info_label, prObject.number, prObject.created_at, prObject.user.login);
         holder.prInfoLabel.setText(infoLabel);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         if(listOfpullRequests == null) { return 0; }
         return listOfpullRequests.size();
+    }
+
+    public void clear() {
+        listOfpullRequests.clear();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

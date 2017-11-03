@@ -5,6 +5,7 @@ import java.util.List;
 import example.pullrequest.com.api.PullRequestResponse;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Path;
 
 /**
@@ -12,6 +13,7 @@ import retrofit2.http.Path;
  */
 
 public interface IRestClient {
+    @Headers("Accept: application/vnd.github.diff")
     @GET("/repos/{owner}/{repo}/pulls")
     Observable<List<PullRequestResponse>> getPullRequests(@Path("owner") String owner, @Path("repo") String repo);
 }
