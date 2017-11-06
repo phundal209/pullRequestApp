@@ -1,11 +1,12 @@
 package example.pullrequest.com.pullrequestapp.ui.main.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -14,6 +15,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import example.pullrequest.com.api.PullRequestResponse;
 import example.pullrequest.com.pullrequestapp.R;
+import example.pullrequest.com.pullrequestapp.ui.diff_view.DiffActivity;
+import example.pullrequest.com.pullrequestapp.ui.main.FileUtilities;
 import example.pullrequest.com.pullrequestapp.ui.main.IMainPresenter;
 
 /**
@@ -41,14 +44,16 @@ public class PullRequestRecycler extends RecyclerView.Adapter<PullRequestRecycle
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        PullRequestResponse prObject = listOfpullRequests.get(position);
+        final PullRequestResponse prObject = listOfpullRequests.get(position);
         holder.nameOfPr.setText(prObject.title);
         String infoLabel = context.getResources().getString(R.string.info_label, prObject.number, prObject.created_at, prObject.user.login);
         holder.prInfoLabel.setText(infoLabel);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(context, DiffActivity.class);
+                intent.putExtra(DiffActivity.diffUrlKey, prObject.diff_url);
+                context.startActivity(intent);
             }
         });
     }

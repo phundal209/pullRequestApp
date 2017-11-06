@@ -1,4 +1,4 @@
-package example.pullrequest.com.pullrequestapp.ui;
+package example.pullrequest.com.pullrequestapp.ui.main;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

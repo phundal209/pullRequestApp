@@ -2,7 +2,7 @@ package example.pullrequest.com.pullrequestapp.injection;
 
 
 import dagger.Component;
-import example.pullrequest.com.pullrequestapp.ui.MainActivity;
+import example.pullrequest.com.pullrequestapp.ui.main.MainActivity;
 import example.pullrequest.com.pullrequestapp.injection.annotation.PerActivity;
 
 /**
