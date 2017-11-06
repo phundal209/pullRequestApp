@@ -3,6 +3,7 @@ package example.pullrequest.com.pullrequestapp.ui.diff_view;
 import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import example.pullrequest.com.pullrequestapp.R;
 
@@ -24,9 +25,18 @@ public class DiffActivity extends Activity {
                 && getIntent().getExtras() != null
                 && getIntent().getExtras().getString(diffUrlKey) != null) {
             diffUrl = getIntent().getExtras().getString(diffUrlKey);
+            webView.setWebViewClient(new myWebViewClient());
             webView.loadUrl(diffUrl);
         }
 
+    }
+
+    public class myWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
     }
 
 }
